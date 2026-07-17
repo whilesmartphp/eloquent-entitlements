@@ -27,7 +27,7 @@ class Coupon extends Model
 
     public function getTable(): string
     {
-        return config('entitlements.coupons_table', 'coupons');
+        return config('entitlements.coupons_table', 'entitlement_coupons');
     }
 
     public function grantsPlan(): BelongsTo

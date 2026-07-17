@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create(config('entitlements.subscriptions_table', 'subscriptions'), function (Blueprint $table) {
+        Schema::create(config('entitlements.subscriptions_table', 'entitlement_subscriptions'), function (Blueprint $table) {
             $table->id();
             $table->morphs('owner');
             $table->unsignedBigInteger('plan_id')->nullable();
@@ -26,6 +26,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists(config('entitlements.subscriptions_table', 'subscriptions'));
+        Schema::dropIfExists(config('entitlements.subscriptions_table', 'entitlement_subscriptions'));
     }
 };

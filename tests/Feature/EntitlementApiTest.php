@@ -76,7 +76,7 @@ class EntitlementApiTest extends TestCase
         ])->assertCreated()
             ->assertJsonPath('data.grant', 'subscription');
 
-        $this->assertDatabaseHas('subscriptions', [
+        $this->assertDatabaseHas(config('entitlements.subscriptions_table'), [
             'owner_id' => $owner->id,
             'plan_id' => $plan->id,
             'status' => 'comped',

@@ -26,7 +26,7 @@ class Subscription extends Model
 
     public function getTable(): string
     {
-        return config('entitlements.subscriptions_table', 'subscriptions');
+        return config('entitlements.subscriptions_table', 'entitlement_subscriptions');
     }
 
     public function owner(): MorphTo

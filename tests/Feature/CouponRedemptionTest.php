@@ -41,7 +41,7 @@ class CouponRedemptionTest extends TestCase
         $this->assertSame($plan->id, $result->plan_id);
         $this->assertTrue(app(Entitlements::class)->allows($owner, 'reports'));
 
-        $this->assertDatabaseHas('coupon_redemptions', [
+        $this->assertDatabaseHas(config('entitlements.coupon_redemptions_table'), [
             'coupon_id' => $coupon->id,
             'owner_id' => $owner->id,
         ]);
@@ -72,7 +72,7 @@ class CouponRedemptionTest extends TestCase
 
         $this->assertSame(25, $result->metadata['amount']);
         $this->assertSame('percent_off', $result->metadata['discount_type']);
-        $this->assertDatabaseHas('coupon_redemptions', [
+        $this->assertDatabaseHas(config('entitlements.coupon_redemptions_table'), [
             'coupon_id' => $coupon->id,
             'owner_id' => $owner->id,
         ]);
@@ -91,8 +91,8 @@ class CouponRedemptionTest extends TestCase
             $this->assertStringContainsString('expired', $e->getMessage());
         }
 
-        $this->assertDatabaseCount('coupon_redemptions', 0);
-        $this->assertDatabaseCount('subscriptions', 0);
+        $this->assertDatabaseCount(config('entitlements.coupon_redemptions_table'), 0);
+        $this->assertDatabaseCount(config('entitlements.subscriptions_table'), 0);
     }
 
     #[Test]

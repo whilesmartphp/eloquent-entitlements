@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create(config('entitlements.coupon_redemptions_table', 'coupon_redemptions'), function (Blueprint $table) {
+        Schema::create(config('entitlements.coupon_redemptions_table', 'entitlement_coupon_redemptions'), function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('coupon_id');
             $table->morphs('owner');
@@ -21,6 +21,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists(config('entitlements.coupon_redemptions_table', 'coupon_redemptions'));
+        Schema::dropIfExists(config('entitlements.coupon_redemptions_table', 'entitlement_coupon_redemptions'));
     }
 };

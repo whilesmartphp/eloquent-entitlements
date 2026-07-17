@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create(config('entitlements.plans_table', 'plans'), function (Blueprint $table) {
+        Schema::create(config('entitlements.plans_table', 'entitlement_plans'), function (Blueprint $table) {
             $table->id();
             $table->string('key')->unique();
             $table->string('name');
@@ -24,6 +24,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists(config('entitlements.plans_table', 'plans'));
+        Schema::dropIfExists(config('entitlements.plans_table', 'entitlement_plans'));
     }
 };
