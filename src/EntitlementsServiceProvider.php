@@ -35,7 +35,11 @@ class EntitlementsServiceProvider extends ServiceProvider
     {
         $router->aliasMiddleware('feature', RequireFeature::class);
 
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        // A host that binds its own PlanSource may not want this package's
+        // tables at all; let it opt out and keep only the contract.
+        if (config('entitlements.register_migrations', true)) {
+            $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        }
 
         $this->publishes([
             __DIR__.'/../config/entitlements.php' => config_path('entitlements.php'),

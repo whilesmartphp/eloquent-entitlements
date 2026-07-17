@@ -11,6 +11,10 @@ return [
     'route_prefix' => env('ENTITLEMENTS_ROUTE_PREFIX', 'api'),
     'route_middleware' => ['api', 'auth:sanctum'],
 
+    // Set false when a host binds its own PlanSource and does not want this
+    // package's tables created.
+    'register_migrations' => env('ENTITLEMENTS_REGISTER_MIGRATIONS', true),
+
     // Namespaced so a host can install this alongside a billing package that
     // owns the generic names. Laravel Cashier hardcodes `subscriptions` in its
     // published migration, so an unprefixed default would collide with it.
