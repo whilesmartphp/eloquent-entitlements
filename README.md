@@ -66,9 +66,34 @@ $workspace->activeSubscription();
 - `Coupon` / `CouponRedemption`: comp, plan-grant and discount coupons, with every
   redemption recorded for audit.
 
-`PlanEntitlements` resolves the four contract methods from this layer: overrides first,
-then the owner's active-or-comped subscription plan. A comped subscription with no plan
-reads as unlimited.
+`PlanEntitlements` resolves the four contract methods: overrides first, then whatever plan
+the bound `PlanSource` reports for the owner.
+
+## Where plans come from
+
+`PlanEntitlements` holds the resolution rules (an override wins; a comp is unlimited; an
+absent meter allowance is unlimited) but not the storage. Finding the owner's plan is a
+second seam, `Whilesmart\Entitlements\Contracts\PlanSource`:
+
+```php
+public function resolve(?Model $owner): ?ResolvedPlan;
+```
+
+`ResolvedPlan` is a plain value object (`features`, `limits`, `meters` maps, read with
+`data_get`, so keys may nest). Return `null` when nothing entitles the owner, or
+`ResolvedPlan::unlimited()` for an entitling subscription with no plan behind it.
+
+The default, `EloquentPlanSource`, reads the models above, and resolving the owner's
+subscription is its business rather than the caller's. So an app that models subscriptions
+differently, keeps plans in config, or asks a remote service, replaces only this and keeps
+the rules:
+
+```php
+$this->app->bind(PlanSource::class, MyConfigPlanSource::class);
+```
+
+The models above are then just the default source's storage; a host that binds its own
+leaves those tables empty.
 
 ## Metering
 

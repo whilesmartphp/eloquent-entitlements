@@ -6,8 +6,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Whilesmart\Entitlements\Contracts\BillingProvider;
 use Whilesmart\Entitlements\Contracts\Entitlements;
+use Whilesmart\Entitlements\Contracts\PlanSource;
 use Whilesmart\Entitlements\Contracts\UsageMeter;
 use Whilesmart\Entitlements\Support\AllowAllEntitlements;
+use Whilesmart\Entitlements\Support\EloquentPlanSource;
 use Whilesmart\Entitlements\Support\NullBillingProvider;
 use Whilesmart\Entitlements\Support\NullUsageMeter;
 
@@ -21,6 +23,7 @@ class EntitlementsServiceProvider extends ServiceProvider
         $this->app->singleton(Entitlements::class, AllowAllEntitlements::class);
         $this->app->bindIf(UsageMeter::class, NullUsageMeter::class);
         $this->app->bindIf(BillingProvider::class, NullBillingProvider::class);
+        $this->app->bindIf(PlanSource::class, EloquentPlanSource::class);
     }
 
     public function boot(): void
