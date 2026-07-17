@@ -5,19 +5,21 @@ namespace Whilesmart\Entitlements\Support;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Whilesmart\Entitlements\Contracts\Entitlements;
+use Whilesmart\Entitlements\Contracts\PlanSource;
 use Whilesmart\Entitlements\Contracts\UsageMeter;
 use Whilesmart\Entitlements\Models\Entitlement;
-use Whilesmart\Entitlements\Models\Plan;
-use Whilesmart\Entitlements\Models\Subscription;
 
 /**
- * Resolves entitlements from the model layer: per-owner overrides win, then the
- * owner's active-or-comped subscription plan. A comped subscription with no
- * plan is treated as unlimited. Metering is delegated to the bound UsageMeter.
+ * Applies the resolution rules: a per-owner override wins, otherwise whatever
+ * plan the bound PlanSource resolves for the owner. Nothing here knows where
+ * plans or subscriptions are stored; metering goes to the bound UsageMeter.
  */
 class PlanEntitlements implements Entitlements
 {
-    public function __construct(private UsageMeter $meter) {}
+    public function __construct(
+        private UsageMeter $meter,
+        private PlanSource $plans,
+    ) {}
 
     public function allows(?Model $owner, string $feature): bool
     {
@@ -31,14 +33,7 @@ class PlanEntitlements implements Entitlements
             }
         }
 
-        $plan = $this->activePlan($owner);
-
-        if ($plan === null) {
-            // An entitling subscription with no plan (a pure comp) is unlimited.
-            return $this->activeSubscription($owner) !== null;
-        }
-
-        return $plan->feature($feature);
+        return $this->plans->resolve($owner)?->feature($feature) ?? false;
     }
 
     public function limit(?Model $owner, string $key): ?int
@@ -53,13 +48,7 @@ class PlanEntitlements implements Entitlements
             }
         }
 
-        $plan = $this->activePlan($owner);
-
-        if ($plan === null) {
-            return null;
-        }
-
-        return $plan->limitFor($key);
+        return $this->plans->resolve($owner)?->limitFor($key);
     }
 
     public function remaining(?Model $owner, string $meter): int|float
@@ -84,34 +73,7 @@ class PlanEntitlements implements Entitlements
             }
         }
 
-        $plan = $this->activePlan($owner);
-
-        if ($plan === null) {
-            return INF;
-        }
-
-        return $plan->meterAllowance($meter) ?? INF;
-    }
-
-    private function activeSubscription(?Model $owner): ?Subscription
-    {
-        if ($owner === null) {
-            return null;
-        }
-
-        $model = config('entitlements.models.subscription', Subscription::class);
-
-        return $model::query()
-            ->where('owner_type', $owner->getMorphClass())
-            ->where('owner_id', $owner->getKey())
-            ->active()
-            ->latest('id')
-            ->first();
-    }
-
-    private function activePlan(?Model $owner): ?Plan
-    {
-        return $this->activeSubscription($owner)?->plan;
+        return $this->plans->resolve($owner)?->meterAllowance($meter) ?? INF;
     }
 
     /**
