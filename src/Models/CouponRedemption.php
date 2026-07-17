@@ -16,7 +16,7 @@ class CouponRedemption extends Model
 
     public function getTable(): string
     {
-        return config('entitlements.coupon_redemptions_table', 'coupon_redemptions');
+        return config('entitlements.coupon_redemptions_table', 'entitlement_coupon_redemptions');
     }
 
     public function owner(): MorphTo

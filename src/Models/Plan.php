@@ -23,7 +23,7 @@ class Plan extends Model
 
     public function getTable(): string
     {
-        return config('entitlements.plans_table', 'plans');
+        return config('entitlements.plans_table', 'entitlement_plans');
     }
 
     public function subscriptions(): HasMany

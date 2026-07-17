@@ -59,7 +59,7 @@ class EntitlementScopingTest extends TestCase
             'code' => 'FREE',
         ])->assertForbidden();
 
-        $this->assertDatabaseCount('subscriptions', 0);
-        $this->assertDatabaseCount('coupon_redemptions', 0);
+        $this->assertDatabaseCount(config('entitlements.subscriptions_table'), 0);
+        $this->assertDatabaseCount(config('entitlements.coupon_redemptions_table'), 0);
     }
 }

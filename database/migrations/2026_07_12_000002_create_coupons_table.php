@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create(config('entitlements.coupons_table', 'coupons'), function (Blueprint $table) {
+        Schema::create(config('entitlements.coupons_table', 'entitlement_coupons'), function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique();
             $table->string('type');
@@ -27,6 +27,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists(config('entitlements.coupons_table', 'coupons'));
+        Schema::dropIfExists(config('entitlements.coupons_table', 'entitlement_coupons'));
     }
 };
