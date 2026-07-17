@@ -1,4 +1,4 @@
-## [1.0.0] - 2026-07-12
+## [1.0.0] - 2026-07-17
 - Provider-neutral entitlements seam: allow-all default keeps self-hosting free, hosts rebind to enforce
 - Plan source seam: the resolution rules stay put while plans and subscriptions may live wherever a host keeps them
 - Feature gating middleware and an owner resolver seam, so a route gates on a feature and denials answer 402
