@@ -1,6 +1,8 @@
 ## [1.0.0] - 2026-07-12
 - Provider-neutral entitlements seam: allow-all default keeps self-hosting free, hosts rebind to enforce
 - Plan source seam: the resolution rules stay put while plans and subscriptions may live wherever a host keeps them
+- Feature gating middleware and an owner resolver seam, so a route gates on a feature and denials answer 402
+- Access results carry the denial reason, so a caller can tell the user why rather than a bare no
 - Plans with feature flags, limits and metered allowances, scoped per polymorphic owner via owner-access
 - Subscriptions with a lifecycle (active, trialing, past due, canceled, comped) and an active scope
 - Per-owner entitlement overrides that win over the plan

@@ -26,9 +26,33 @@ Everything gates through one contract, `Whilesmart\Entitlements\Contracts\Entitl
 $entitlements = app(Entitlements::class);
 
 $entitlements->allows($owner, 'reports');      // bool
+$entitlements->check($owner, 'reports');       // AccessResult: allowed + why not
 $entitlements->limit($owner, 'seats');         // ?int, null = unlimited
 $entitlements->remaining($owner, 'api_calls'); // int|float
 $entitlements->consume($owner, 'api_calls', 1);
+```
+
+`check()` returns an `AccessResult` (`allowed`, `feature`, `reason`, `limit`) so a denial can
+say why, not just no. The reason is a stable code: `no_owner`, `no_plan`, `feature_not_in_plan`.
+
+## Gating a route
+
+Gate a route or group on a feature with the `feature` middleware. A denied request gets a 402
+carrying the feature and reason:
+
+```php
+Route::middleware('feature:reports')->group(function () {
+    // ...
+});
+```
+
+The middleware needs to know which model owns the entitlement. The default `OwnerResolver`
+uses the authenticated user; a host that gates by workspace or organization binds its own:
+
+```php
+use Whilesmart\Entitlements\Contracts\OwnerResolver;
+
+$this->app->bind(OwnerResolver::class, WorkspaceOwnerResolver::class);
 ```
 
 The default binding, `AllowAllEntitlements`, allows every feature, imposes no limit and

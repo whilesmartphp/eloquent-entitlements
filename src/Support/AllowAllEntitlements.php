@@ -16,6 +16,11 @@ class AllowAllEntitlements implements Entitlements
         return true;
     }
 
+    public function check(?Model $owner, string $feature): AccessResult
+    {
+        return AccessResult::allow($feature);
+    }
+
     public function limit(?Model $owner, string $key): ?int
     {
         return null;

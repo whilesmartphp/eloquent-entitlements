@@ -2,13 +2,17 @@
 
 namespace Whilesmart\Entitlements;
 
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Whilesmart\Entitlements\Contracts\BillingProvider;
 use Whilesmart\Entitlements\Contracts\Entitlements;
+use Whilesmart\Entitlements\Contracts\OwnerResolver;
 use Whilesmart\Entitlements\Contracts\PlanSource;
 use Whilesmart\Entitlements\Contracts\UsageMeter;
+use Whilesmart\Entitlements\Http\Middleware\RequireFeature;
 use Whilesmart\Entitlements\Support\AllowAllEntitlements;
+use Whilesmart\Entitlements\Support\AuthUserOwnerResolver;
 use Whilesmart\Entitlements\Support\EloquentPlanSource;
 use Whilesmart\Entitlements\Support\NullBillingProvider;
 use Whilesmart\Entitlements\Support\NullUsageMeter;
@@ -24,10 +28,13 @@ class EntitlementsServiceProvider extends ServiceProvider
         $this->app->bindIf(UsageMeter::class, NullUsageMeter::class);
         $this->app->bindIf(BillingProvider::class, NullBillingProvider::class);
         $this->app->bindIf(PlanSource::class, EloquentPlanSource::class);
+        $this->app->bindIf(OwnerResolver::class, AuthUserOwnerResolver::class);
     }
 
-    public function boot(): void
+    public function boot(Router $router): void
     {
+        $router->aliasMiddleware('feature', RequireFeature::class);
+
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
         $this->publishes([
