@@ -3,6 +3,7 @@
 - Plan source seam: the resolution rules stay put while plans and subscriptions may live wherever a host keeps them
 - Feature gating middleware and an owner resolver seam, so a route gates on a feature and denials answer 402
 - Access results carry the denial reason, so a caller can tell the user why rather than a bare no
+- Migrations can be turned off, so a host that brings its own plan source takes the contract without the tables
 - Plans with feature flags, limits and metered allowances, scoped per polymorphic owner via owner-access
 - Subscriptions with a lifecycle (active, trialing, past due, canceled, comped) and an active scope
 - Per-owner entitlement overrides that win over the plan

@@ -160,5 +160,10 @@ the bound authorizer permits.
 
 ## Configuration
 
-`config/entitlements.php` exposes `register_routes`, `route_prefix`, `route_middleware`,
-the five table names, and a `models` map so any model can be swapped for a host subclass.
+`config/entitlements.php` exposes `register_routes`, `register_migrations`, `route_prefix`,
+`route_middleware`, the five table names, and a `models` map so any model can be swapped for
+a host subclass.
+
+An app that binds its own `PlanSource` (and does not use this package's plans, subscriptions
+or coupons) can set `register_migrations` to `false` to take the gating contract without the
+tables.
