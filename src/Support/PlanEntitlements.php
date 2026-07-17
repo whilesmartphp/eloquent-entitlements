@@ -23,17 +23,30 @@ class PlanEntitlements implements Entitlements
 
     public function allows(?Model $owner, string $feature): bool
     {
+        return $this->check($owner, $feature)->allowed;
+    }
+
+    public function check(?Model $owner, string $feature): AccessResult
+    {
         if ($owner === null) {
-            return false;
+            return AccessResult::deny($feature, 'no_owner');
         }
 
         foreach ($this->overrides($owner) as $override) {
             if ($override->feature === $feature) {
-                return true;
+                return AccessResult::allow($feature);
             }
         }
 
-        return $this->plans->resolve($owner)?->feature($feature) ?? false;
+        $plan = $this->plans->resolve($owner);
+
+        if ($plan === null) {
+            return AccessResult::deny($feature, 'no_plan');
+        }
+
+        return $plan->feature($feature)
+            ? AccessResult::allow($feature)
+            : AccessResult::deny($feature, 'feature_not_in_plan');
     }
 
     public function limit(?Model $owner, string $key): ?int
