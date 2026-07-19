@@ -15,14 +15,19 @@ use Whilesmart\Entitlements\Models\Subscription;
  */
 trait HasEntitlements
 {
-    public function subscriptions(): MorphMany
+    /**
+     * The owner's entitlement subscriptions. Named to avoid colliding with the
+     * subscriptions() relation billing libraries (Cashier, Paddle) add to the
+     * same model, so this trait composes with a payment adapter cleanly.
+     */
+    public function entitlementSubscriptions(): MorphMany
     {
         return $this->morphMany(config('entitlements.models.subscription', Subscription::class), 'owner');
     }
 
     public function activeSubscription(): ?Subscription
     {
-        return $this->subscriptions()->active()->latest('id')->first();
+        return $this->entitlementSubscriptions()->active()->latest('id')->first();
     }
 
     public function entitlementOverrides(): MorphMany
