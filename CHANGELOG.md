@@ -1,3 +1,6 @@
+## [2.0.0] - 2026-07-19
+- Breaking: the owner subscriptions relation is renamed from `subscriptions()` to `entitlementSubscriptions()`, so the trait composes with billing libraries (Cashier, Paddle) that add their own `subscriptions()` to the same model. Update `$owner->subscriptions()` calls to `$owner->entitlementSubscriptions()`; `activeSubscription()` is unchanged.
+
 ## [1.0.0] - 2026-07-17
 - Provider-neutral entitlements seam: allow-all default keeps self-hosting free, hosts rebind to enforce
 - Plan source seam: the resolution rules stay put while plans and subscriptions may live wherever a host keeps them
