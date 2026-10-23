@@ -2,7 +2,7 @@
     "name": "whilesmart/eloquent-entitlements",
     "description": "Provider-neutral feature gating, plan limits and metered usage for Laravel, scoped per polymorphic owner. Ships an allow-all default so self-hosting stays free; hosts rebind to enforce.",
     "type": "library",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "license": "MIT",
     "authors": [
         { "name": "Whilesmart Team" }

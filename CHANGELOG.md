@@ -1,3 +1,6 @@
+## [2.1.0] - 2026-10-23
+- `FreePassService` gives an owner a plan without payment, until a date or until stopped. An owner who already has a live plan cannot be given one
+
 ## [2.0.0] - 2026-07-19
 - Breaking: the owner subscriptions relation is renamed from `subscriptions()` to `entitlementSubscriptions()`, so the trait composes with billing libraries (Cashier, Paddle) that add their own `subscriptions()` to the same model. Update `$owner->subscriptions()` calls to `$owner->entitlementSubscriptions()`; `activeSubscription()` is unchanged.
 

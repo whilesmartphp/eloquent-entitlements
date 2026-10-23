@@ -142,6 +142,20 @@ app(CouponService::class)->redeem($coupon, $owner);
 
 Redemption is rejected when the coupon is expired or has reached `max_redemptions`.
 
+## Free passes
+
+```php
+$passes = app(\Whilesmart\Entitlements\Services\FreePassService::class);
+
+$pass = $passes->grant($owner, $plan, until: now()->addMonth());
+$passes->all();
+$passes->stop($pass->id);
+```
+
+A pass gives an owner a plan without payment. It is a `comped` subscription, so the
+plan applies as a paid one does, and it ends on its date without a scheduled job, or
+at once when stopped. An owner who already has a live plan cannot be given one.
+
 ## Billing
 
 `Whilesmart\Entitlements\Contracts\BillingProvider` is the checkout seam. The default,
